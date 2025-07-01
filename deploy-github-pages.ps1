@@ -8,10 +8,10 @@ param(
 )
 
 # Renkli output için fonksiyonlar
-function Write-Success { param($Message) Write-Host "✅ $Message" -ForegroundColor Green }
-function Write-Info { param($Message) Write-Host "ℹ️  $Message" -ForegroundColor Cyan }
-function Write-Warning { param($Message) Write-Host "⚠️  $Message" -ForegroundColor Yellow }
-function Write-Error { param($Message) Write-Host "❌ $Message" -ForegroundColor Red }
+function Write-Success { param($Message) Write-Host "[SUCCESS] $Message" -ForegroundColor Green }
+function Write-Info { param($Message) Write-Host "[INFO] $Message" -ForegroundColor Cyan }
+function Write-Warning { param($Message) Write-Host "[WARNING] $Message" -ForegroundColor Yellow }
+function Write-Error { param($Message) Write-Host "[ERROR] $Message" -ForegroundColor Red }
 
 Write-Info "GitHub Pages Deployment Script Başlatılıyor..."
 Write-Info "Repository: $RepoOwner/$RepoName"
@@ -31,7 +31,7 @@ try {
             git add .
             $commitMessage = Read-Host "Commit mesajı girin (boş bırakırsanız otomatik mesaj kullanılır)"
             if ([string]::IsNullOrWhiteSpace($commitMessage)) {
-                $commitMessage = "🚀 GitHub Pages deployment - $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
+                $commitMessage = "GitHub Pages deployment - $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
             }
             git commit -m $commitMessage
             Write-Success "Değişiklikler commit edildi"

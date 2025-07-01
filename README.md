@@ -29,7 +29,7 @@ Modern, responsive ve kullanıcı dostu hukuki hesaplama web uygulaması. GitHub
 
 ## 🌐 Canlı Demo
 
-[GitHub Pages'de Görüntüle](https://yourusername.github.io/YargilamaGideri)
+[GitHub Pages'de Görüntüle](https://saffetcelik.github.io/hesaplama)
 
 ## 📱 Ekran Görüntüleri
 
@@ -46,10 +46,10 @@ Modern, responsive ve kullanıcı dostu hukuki hesaplama web uygulaması. GitHub
 
 ### GitHub Pages ile Yayınlama
 
-1. **Repository'yi Fork Edin**
+1. **Repository'yi Clone Edin**
    ```bash
-   git clone https://github.com/yourusername/YargilamaGideri.git
-   cd YargilamaGideri
+   git clone https://github.com/saffetcelik/hesaplama.git
+   cd hesaplama
    ```
 
 2. **GitHub Pages'i Etkinleştirin**
@@ -59,16 +59,16 @@ Modern, responsive ve kullanıcı dostu hukuki hesaplama web uygulaması. GitHub
    - Save
 
 3. **Canlı Yayında!**
-   - Siteniz `https://yourusername.github.io/YargilamaGideri` adresinde yayında
+   - Siteniz `https://saffetcelik.github.io/hesaplama` adresinde yayında
 
 ### Yerel Geliştirme
 
 ```bash
 # Repository'yi klonlayın
-git clone https://github.com/yourusername/YargilamaGideri.git
+git clone https://github.com/saffetcelik/hesaplama.git
 
 # Dizine gidin
-cd YargilamaGideri
+cd hesaplama
 
 # Basit HTTP server başlatın
 python -m http.server 8000
@@ -82,14 +82,13 @@ open http://localhost:8000
 ## 📁 Proje Yapısı
 
 ```
-YargilamaGideri/
+hesaplama/
 ├── index.html          # Ana HTML dosyası
 ├── styles.css          # Modern CSS stilleri
 ├── script.js           # JavaScript işlevleri
 ├── key.png             # Logo dosyası
 ├── README.md           # Bu dosya
-├── screenshots/        # Ekran görüntüleri
-└── docs/              # Dokümantasyon
+└── .github/workflows/  # GitHub Actions
 ```
 
 ## 🎨 Teknolojiler
@@ -145,9 +144,9 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ## 👨‍💻 Geliştirici
 
-**Hukuki Hesaplama Programı**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+**Saffet Çelik**
+- GitHub: [@saffetcelik](https://github.com/saffetcelik)
+- Email: saffetcelik@icloud.com
 
 ## 🙏 Teşekkürler
 

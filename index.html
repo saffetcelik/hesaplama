@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hukuki Hesaplama Programı</title>
+    <meta name="description" content="Modern hukuki hesaplama aracı - Yargılama gideri, harç ve vekalet ücreti hesaplama">
+    <link rel="icon" type="image/png" href="key.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Modern Single Page Application -->
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <img src="key.png" alt="Logo" class="logo-img">
+                        <div class="logo-text">
+                            <h1>Hukuki Hesaplama</h1>
+                            <span>Yargılama Gideri Hesaplama Aracı</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button id="theme-toggle" class="btn-icon" title="Tema Değiştir">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button id="help-btn" class="btn-icon" title="Yardım">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Calculation Type Selector -->
+                <div class="calc-selector">
+                    <div class="selector-header">
+                        <h2><i class="fas fa-calculator"></i> Hesaplama Türü Seçin</h2>
+                        <p>Dava sonucuna göre uygun hesaplama türünü seçin</p>
+                    </div>
+                    <div class="calc-types">
+                        <button class="calc-type active" data-type="tam-kabul">
+                            <div class="calc-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h3>Tam Kabul</h3>
+                            <p>Davanın tamamen kabul edildiği durumlar</p>
+                        </button>
+                        <button class="calc-type" data-type="kismen-kabul">
+                            <div class="calc-icon">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <h3>Kısmen Kabul/Ret</h3>
+                            <p>Davanın kısmen kabul edildiği durumlar</p>
+                        </button>
+                        <button class="calc-type" data-type="davanin-reddi">
+                            <div class="calc-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <h3>Davanın Reddi</h3>
+                            <p>Davanın tamamen reddedildiği durumlar</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Calculation Form -->
+                <div class="calc-form">
+                    <!-- Case Information Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-info-circle"></i> Dava Bilgileri</h3>
+                        </div>
+                        <div class="form-grid">
+                            <div class="checkbox-group" id="case-info-checkboxes">
+                                <!-- Checkboxes will be dynamically generated -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Information Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-money-bill-wave"></i> Harç ve Masraf Bilgileri</h3>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group" id="financial-inputs">
+                                <!-- Inputs will be dynamically generated -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions">
+                        <button id="clear-btn" class="btn btn-secondary">
+                            <i class="fas fa-eraser"></i>
+                            <span>Temizle</span>
+                        </button>
+                        <button id="calculate-btn" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i>
+                            <span>Hesapla</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section" id="results-section" style="display: none;">
+                    <div class="results-card">
+                        <div class="results-header">
+                            <h3><i class="fas fa-file-alt"></i> Hesaplama Sonucu</h3>
+                            <div class="results-actions">
+                                <button id="copy-btn" class="btn btn-outline">
+                                    <i class="fas fa-copy"></i>
+                                    <span>Kopyala</span>
+                                </button>
+                                <button id="print-btn" class="btn btn-outline">
+                                    <i class="fas fa-print"></i>
+                                    <span>Yazdır</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="results-content" id="results-content">
+                            <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <p>&copy; 2024 Hukuki Hesaplama Programı</p>
+                        <p>Modern Web Uygulaması - v2.0</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#" id="about-link">Hakkında</a>
+                        <a href="#" id="contact-link">İletişim</a>
+                        <a href="https://github.com" target="_blank">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Status Toast -->
+        <div class="toast" id="toast">
+            <div class="toast-content">
+                <i class="toast-icon"></i>
+                <span class="toast-message"></span>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal" id="help-modal">
+            <div class="modal-overlay" id="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-question-circle"></i> Kullanım Kılavuzu</h3>
+                    <button class="modal-close" id="modal-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-section">
+                        <h4>Nasıl Kullanılır?</h4>
+                        <ol>
+                            <li>Dava sonucuna göre hesaplama türünü seçin</li>
+                            <li>Dava bilgilerini işaretleyin</li>
+                            <li>Harç ve masraf bilgilerini girin</li>
+                            <li>Hesapla butonuna tıklayın</li>
+                            <li>Sonucu kopyalayın veya yazdırın</li>
+                        </ol>
+                    </div>
+                    <div class="help-section">
+                        <h4>Hesaplama Türleri</h4>
+                        <ul>
+                            <li><strong>Tam Kabul:</strong> Davanın tamamen kabul edildiği durumlar</li>
+                            <li><strong>Kısmen Kabul/Ret:</strong> Davanın kısmen kabul edildiği durumlar</li>
+                            <li><strong>Davanın Reddi:</strong> Davanın tamamen reddedildiği durumlar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

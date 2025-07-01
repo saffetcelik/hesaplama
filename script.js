@@ -60,15 +60,15 @@ function generateFormFields() {
     // Input alanlarını oluştur
     const inputs = getInputsForType(currentCalculationType);
     inputContainer.innerHTML = inputs.map(input => `
-        <div class="input-field">
+        <div class="input-field ${input.type === 'money' ? 'money-field' : ''}">
             <label for="${input.id}" class="input-label">
                 <i class="${input.icon}"></i>
                 ${input.label}
             </label>
-            <input 
-                type="text" 
-                id="${input.id}" 
-                class="input ${input.type === 'money' ? 'money-input' : ''}" 
+            <input
+                type="text"
+                id="${input.id}"
+                class="input ${input.type === 'money' ? 'money-input' : ''}"
                 placeholder="${input.placeholder}"
                 value="${input.value || ''}"
             >
@@ -126,20 +126,20 @@ function getCheckboxesForType(type) {
 // Hesaplama türüne göre input'ları al
 function getInputsForType(type) {
     const commonInputs = [
-        { id: `${getPrefix()}-dava-miktari`, label: 'Dava edilen miktar', icon: 'fas fa-lira-sign', type: 'money', placeholder: '0,00' },
-        { id: `${getPrefix()}-basvuru-harc`, label: 'Başvuru Harcı', icon: 'fas fa-file-invoice', type: 'money', placeholder: '0,00', value: '427,60' },
-        { id: `${getPrefix()}-pesin-harc`, label: 'Peşin/Nisbi Harç', icon: 'fas fa-money-bill', type: 'money', placeholder: '0,00', value: '427,60' },
-        { id: `${getPrefix()}-tamamlama-harci`, label: 'Tamamlama Harcı', icon: 'fas fa-plus-circle', type: 'money', placeholder: '0,00' },
-        { id: `${getPrefix()}-islah-harci`, label: 'Islah Harcı', icon: 'fas fa-edit', type: 'money', placeholder: '0,00' },
-        { id: `${getPrefix()}-kesif-harc`, label: 'Keşif Harcı', icon: 'fas fa-search', type: 'money', placeholder: '0,00' },
-        { id: `${getPrefix()}-bilirkisi`, label: 'Bilirkişi Ücretleri', icon: 'fas fa-user-tie', type: 'money', placeholder: '0,00' },
-        { id: `${getPrefix()}-tebligat`, label: 'Tebligat, Posta ve Sair Masraf', icon: 'fas fa-envelope', type: 'money', placeholder: '0,00' }
+        { id: `${getPrefix()}-dava-miktari`, label: 'Dava edilen miktar', icon: 'fas fa-lira-sign', type: 'money', placeholder: '0,00 TL' },
+        { id: `${getPrefix()}-basvuru-harc`, label: 'Başvuru Harcı', icon: 'fas fa-file-invoice', type: 'money', placeholder: '0,00 TL', value: '427,60' },
+        { id: `${getPrefix()}-pesin-harc`, label: 'Peşin/Nisbi Harç', icon: 'fas fa-money-bill', type: 'money', placeholder: '0,00 TL', value: '427,60' },
+        { id: `${getPrefix()}-tamamlama-harci`, label: 'Tamamlama Harcı', icon: 'fas fa-plus-circle', type: 'money', placeholder: '0,00 TL' },
+        { id: `${getPrefix()}-islah-harci`, label: 'Islah Harcı', icon: 'fas fa-edit', type: 'money', placeholder: '0,00 TL' },
+        { id: `${getPrefix()}-kesif-harc`, label: 'Keşif Harcı', icon: 'fas fa-search', type: 'money', placeholder: '0,00 TL' },
+        { id: `${getPrefix()}-bilirkisi`, label: 'Bilirkişi Ücretleri', icon: 'fas fa-user-tie', type: 'money', placeholder: '0,00 TL' },
+        { id: `${getPrefix()}-tebligat`, label: 'Tebligat, Posta ve Sair Masraf', icon: 'fas fa-envelope', type: 'money', placeholder: '0,00 TL' }
     ];
     
     if (type === 'kismen-kabul') {
         return [
-            { id: `${getPrefix()}-dava-miktari`, label: 'Dava edilen miktar', icon: 'fas fa-lira-sign', type: 'money', placeholder: '0,00' },
-            { id: `${getPrefix()}-kabul-miktari`, label: 'Kabul edilen miktar', icon: 'fas fa-check', type: 'money', placeholder: '0,00' },
+            { id: `${getPrefix()}-dava-miktari`, label: 'Dava edilen miktar', icon: 'fas fa-lira-sign', type: 'money', placeholder: '0,00 TL' },
+            { id: `${getPrefix()}-kabul-miktari`, label: 'Kabul edilen miktar', icon: 'fas fa-check', type: 'money', placeholder: '0,00 TL' },
             ...commonInputs.slice(1)
         ];
     }

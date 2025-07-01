@@ -104,11 +104,22 @@ body {
     font-size: 0.875rem;
     line-height: 1.6;
     color: var(--text-primary);
-    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    background: var(--bg-primary);
     min-height: 100vh;
     transition: all var(--transition);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light theme background */
+[data-theme="light"] body,
+:root body {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+}
+
+/* Dark theme background */
+[data-theme="dark"] body {
+    background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
 }
 
 /* Container */
@@ -469,6 +480,27 @@ body {
     font-family: var(--font-mono);
     font-weight: 500;
     letter-spacing: 0.025em;
+}
+
+.input-field {
+    position: relative;
+}
+
+.input-field.money-field::after {
+    content: "TL";
+    position: absolute;
+    right: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.input-field.money-field .input {
+    padding-right: calc(var(--space-3) + 2rem);
 }
 
 /* Button Styles */

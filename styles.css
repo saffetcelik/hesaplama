@@ -82,6 +82,7 @@
     --text-muted: var(--gray-400);
     --border: var(--gray-700);
     --border-light: var(--gray-800);
+    --primary-light: rgba(59, 130, 246, 0.1);
 }
 
 /* Reset & Base */
@@ -296,6 +297,27 @@ body {
 
 .calc-type.active .calc-icon i {
     color: var(--white);
+}
+
+/* Dark theme için seçili kart stilleri */
+[data-theme="dark"] .calc-type.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3), var(--shadow-md);
+}
+
+[data-theme="dark"] .calc-type.active .calc-icon {
+    background: var(--primary);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .calc-type.active h3 {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+[data-theme="dark"] .calc-type.active p {
+    color: var(--text-secondary);
 }
 
 .calc-type h3 {

@@ -164,5 +164,6 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 
  
-.\deploy-actions.ps1 -SetupWorkflow
+.\deploy-actions.ps1 -SetupWorkflow ( İlk kurulum.)
+.\deploy-actions.ps1 -CommitMessage "Ana sayfa tasarimi guncellendi"
 .\deploy-actions.ps1

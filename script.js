@@ -127,8 +127,8 @@ function getCheckboxesForType(type) {
 function getInputsForType(type) {
     const commonInputs = [
         { id: `${getPrefix()}-dava-miktari`, label: 'Dava edilen miktar', icon: 'fas fa-lira-sign', type: 'money', placeholder: '0,00 TL' },
-        { id: `${getPrefix()}-basvuru-harc`, label: 'Başvuru Harcı', icon: 'fas fa-file-invoice', type: 'money', placeholder: '0,00 TL', value: '427,60' },
-        { id: `${getPrefix()}-pesin-harc`, label: 'Peşin/Nisbi Harç', icon: 'fas fa-money-bill', type: 'money', placeholder: '0,00 TL', value: '427,60' },
+        { id: `${getPrefix()}-basvuru-harc`, label: 'Başvuru Harcı', icon: 'fas fa-file-invoice', type: 'money', placeholder: '0,00 TL', value: '615,40' },
+        { id: `${getPrefix()}-pesin-harc`, label: 'Peşin/Nisbi Harç', icon: 'fas fa-money-bill', type: 'money', placeholder: '0,00 TL', value: '615,40' },
         { id: `${getPrefix()}-tamamlama-harci`, label: 'Tamamlama Harcı', icon: 'fas fa-plus-circle', type: 'money', placeholder: '0,00 TL' },
         { id: `${getPrefix()}-islah-harci`, label: 'Islah Harcı', icon: 'fas fa-edit', type: 'money', placeholder: '0,00 TL' },
         { id: `${getPrefix()}-kesif-harc`, label: 'Keşif Harcı', icon: 'fas fa-search', type: 'money', placeholder: '0,00 TL' },
@@ -274,7 +274,7 @@ function clearForm() {
         if (input.type === 'checkbox') {
             input.checked = false;
         } else {
-            input.value = input.id.includes('basvuru-harc') || input.id.includes('pesin-harc') ? '427,60' : '';
+            input.value = input.id.includes('basvuru-harc') || input.id.includes('pesin-harc') ? '615,40' : '';
         }
     });
     
@@ -564,7 +564,7 @@ function calculateRejection() {
 
         const partyText = getPartyText(formData.checkboxes['multiple-plaintiffs'], formData.checkboxes['multiple-defendants']);
 
-        const maktuHarc = 427.60;
+        const maktuHarc = 615.40;
         const { feeParts, totalPaidFees } = getFeeParts(formData);
 
         if (totalPaidFees === maktuHarc) {

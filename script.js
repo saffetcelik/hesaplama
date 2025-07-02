@@ -347,6 +347,7 @@ function clearForm() {
 function clearOvertimeForm() {
     document.getElementById('overtime-amount').value = '';
     document.getElementById('discretionary-reduction').value = '30';
+    document.getElementById('mahsup-amount').value = '';
 
     hideResults();
     showToast('Form temizlendi', 'info');
@@ -357,6 +358,7 @@ function calculateOvertime() {
     try {
         const overtimeAmountStr = document.getElementById('overtime-amount').value;
         const reductionRate = parseInt(document.getElementById('discretionary-reduction').value);
+        const mahsupAmountStr = document.getElementById('mahsup-amount').value;
 
         if (!overtimeAmountStr || overtimeAmountStr.trim() === '') {
             showToast('Lütfen fazla mesai tutarını girin!', 'error');
@@ -370,18 +372,29 @@ function calculateOvertime() {
             return;
         }
 
-        // %70'ini hesapla
-        const seventyPercent = overtimeAmount * 0.70;
+        // Mahsup tutarını al (boşsa 0)
+        const mahsupAmount = mahsupAmountStr && mahsupAmountStr.trim() !== '' ? parseAmount(mahsupAmountStr) : 0;
 
-        // Takdiri indirimi ilk girilen tutardan hesapla
-        const discountAmount = overtimeAmount * (reductionRate / 100);
-        const grossAmount = seventyPercent - discountAmount;
+        // %70'ini hesapla (bu brüt tutar)
+        const grossAmount = overtimeAmount * 0.70;
+
+        // Takdiri indirim brüt tutardan hesaplanır
+        const discountAmount = grossAmount * (reductionRate / 100);
+        const afterDiscountAmount = grossAmount - discountAmount;
+
+        // Mahsup düşülmüş brüt tutar
+        const finalGrossAmount = afterDiscountAmount - mahsupAmount;
+
+        if (finalGrossAmount < 0) {
+            showToast('Mahsup tutarı, indirimli brüt tutardan büyük olamaz!', 'error');
+            return;
+        }
 
         // Net ücreti hesapla (0.71491 katsayısı ile)
-        const netAmount = grossAmount * 0.71491;
+        const netAmount = finalGrossAmount * 0.71491;
 
         // Sonucu formatla ve göster
-        const result = formatOvertimeResult(overtimeAmount, reductionRate, seventyPercent, discountAmount, grossAmount, netAmount);
+        const result = formatOvertimeResult(overtimeAmount, reductionRate, grossAmount, discountAmount, afterDiscountAmount, mahsupAmount, finalGrossAmount, netAmount);
         showResults(result, true); // Modern görünüm için true
         showToast('Fazla mesai hesaplaması tamamlandı!', 'success');
 
@@ -392,7 +405,7 @@ function calculateOvertime() {
 }
 
 // Fazla mesai sonucunu formatla
-function formatOvertimeResult(originalAmount, reductionRate, seventyPercent, discountAmount, grossAmount, netAmount) {
+function formatOvertimeResult(originalAmount, reductionRate, grossAmount, discountAmount, afterDiscountAmount, mahsupAmount, finalGrossAmount, netAmount) {
     return `
         <div class="modern-result">
             <div class="result-header">
@@ -419,9 +432,9 @@ function formatOvertimeResult(originalAmount, reductionRate, seventyPercent, dis
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <div class="step-content">
-                            <div class="step-title">%70 Hesaplama</div>
+                            <div class="step-title">Brüt Tutar (%70)</div>
                             <div class="step-formula">${formatCurrency(originalAmount)} × 0.70</div>
-                            <div class="step-result">${formatCurrency(seventyPercent)} TL</div>
+                            <div class="step-result">${formatCurrency(grossAmount)} TL</div>
                         </div>
                     </div>
 
@@ -429,7 +442,7 @@ function formatOvertimeResult(originalAmount, reductionRate, seventyPercent, dis
                         <div class="step-number">2</div>
                         <div class="step-content">
                             <div class="step-title">Takdiri İndirim</div>
-                            <div class="step-formula">${formatCurrency(originalAmount)} × %${reductionRate}</div>
+                            <div class="step-formula">${formatCurrency(grossAmount)} × %${reductionRate}</div>
                             <div class="step-result">-${formatCurrency(discountAmount)} TL</div>
                         </div>
                     </div>
@@ -437,20 +450,40 @@ function formatOvertimeResult(originalAmount, reductionRate, seventyPercent, dis
                     <div class="step-card">
                         <div class="step-number">3</div>
                         <div class="step-content">
-                            <div class="step-title">Brüt Tutar</div>
-                            <div class="step-formula">${formatCurrency(seventyPercent)} - ${formatCurrency(discountAmount)}</div>
-                            <div class="step-result">${formatCurrency(grossAmount)} TL</div>
+                            <div class="step-title">İndirimli Brüt</div>
+                            <div class="step-formula">${formatCurrency(grossAmount)} - ${formatCurrency(discountAmount)}</div>
+                            <div class="step-result">${formatCurrency(afterDiscountAmount)} TL</div>
+                        </div>
+                    </div>
+
+                    ${mahsupAmount > 0 ? `
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Mahsup</div>
+                            <div class="step-formula">${formatCurrency(afterDiscountAmount)} - ${formatCurrency(mahsupAmount)}</div>
+                            <div class="step-result">${formatCurrency(finalGrossAmount)} TL</div>
                         </div>
                     </div>
 
                     <div class="step-card">
-                        <div class="step-number">4</div>
+                        <div class="step-number">5</div>
                         <div class="step-content">
                             <div class="step-title">Net Ücret</div>
-                            <div class="step-formula">${formatCurrency(grossAmount)} × 0.71491</div>
+                            <div class="step-formula">${formatCurrency(finalGrossAmount)} × 0.71491</div>
                             <div class="step-result">${formatCurrency(netAmount)} TL</div>
                         </div>
                     </div>
+                    ` : `
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Net Ücret</div>
+                            <div class="step-formula">${formatCurrency(finalGrossAmount)} × 0.71491</div>
+                            <div class="step-result">${formatCurrency(netAmount)} TL</div>
+                        </div>
+                    </div>
+                    `}
                 </div>
             </div>
 
@@ -460,8 +493,8 @@ function formatOvertimeResult(originalAmount, reductionRate, seventyPercent, dis
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <div class="summary-content">
-                        <div class="summary-label">Brüt Fazla Mesai Ücreti</div>
-                        <div class="summary-amount">${formatCurrency(grossAmount)} TL</div>
+                        <div class="summary-label">${mahsupAmount > 0 ? 'Final Brüt Tutar (Mahsup Sonrası)' : 'Brüt Fazla Mesai Ücreti'}</div>
+                        <div class="summary-amount">${formatCurrency(finalGrossAmount)} TL</div>
                     </div>
                 </div>
 

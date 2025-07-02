@@ -373,8 +373,8 @@ function calculateOvertime() {
         // %70'ini hesapla
         const seventyPercent = overtimeAmount * 0.70;
 
-        // Takdiri indirimi uygula
-        const discountAmount = seventyPercent * (reductionRate / 100);
+        // Takdiri indirimi ilk girilen tutardan hesapla
+        const discountAmount = overtimeAmount * (reductionRate / 100);
         const grossAmount = seventyPercent - discountAmount;
 
         // Net ücreti hesapla (0.71491 katsayısı ile)
@@ -382,7 +382,7 @@ function calculateOvertime() {
 
         // Sonucu formatla ve göster
         const result = formatOvertimeResult(overtimeAmount, reductionRate, seventyPercent, discountAmount, grossAmount, netAmount);
-        showResults(result);
+        showResults(result, true); // Modern görünüm için true
         showToast('Fazla mesai hesaplaması tamamlandı!', 'success');
 
     } catch (error) {
@@ -393,22 +393,97 @@ function calculateOvertime() {
 
 // Fazla mesai sonucunu formatla
 function formatOvertimeResult(originalAmount, reductionRate, seventyPercent, discountAmount, grossAmount, netAmount) {
-    return `FAZLA MESAİ ÜCRETİ HESAPLAMA SONUCU
+    return `
+        <div class="modern-result">
+            <div class="result-header">
+                <div class="result-title">
+                    <i class="fas fa-clock"></i>
+                    <h3>Fazla Mesai Ücreti Hesaplama Sonucu</h3>
+                </div>
+                <div class="result-badge">
+                    <i class="fas fa-briefcase"></i>
+                    İş Mahkemesi
+                </div>
+            </div>
 
-Girilen Fazla Mesai Tutarı: ${formatCurrency(originalAmount)} TL
+            <div class="result-input-summary">
+                <div class="input-card">
+                    <div class="input-label">Girilen Fazla Mesai Tutarı</div>
+                    <div class="input-value">${formatCurrency(originalAmount)} TL</div>
+                </div>
+            </div>
 
-HESAPLAMA ADIMLARI:
-1. Fazla mesai tutarının %70'i: ${formatCurrency(seventyPercent)} TL
-2. Takdiri indirim oranı: %${reductionRate}
-3. Takdiri indirim tutarı: ${formatCurrency(discountAmount)} TL
-4. Brüt tutar: ${formatCurrency(grossAmount)} TL
-5. Net ücret (x0.71491): ${formatCurrency(netAmount)} TL
+            <div class="calculation-steps">
+                <h4><i class="fas fa-calculator"></i> Hesaplama Adımları</h4>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">%70 Hesaplama</div>
+                            <div class="step-formula">${formatCurrency(originalAmount)} × 0.70</div>
+                            <div class="step-result">${formatCurrency(seventyPercent)} TL</div>
+                        </div>
+                    </div>
 
-ÖZET:
-• Brüt Fazla Mesai Ücreti: ${formatCurrency(grossAmount)} TL
-• Net Fazla Mesai Ücreti: ${formatCurrency(netAmount)} TL
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Takdiri İndirim</div>
+                            <div class="step-formula">${formatCurrency(originalAmount)} × %${reductionRate}</div>
+                            <div class="step-result">-${formatCurrency(discountAmount)} TL</div>
+                        </div>
+                    </div>
 
-Bu hesaplama İş Mahkemesi uygulamaları dikkate alınarak yapılmıştır.`;
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Brüt Tutar</div>
+                            <div class="step-formula">${formatCurrency(seventyPercent)} - ${formatCurrency(discountAmount)}</div>
+                            <div class="step-result">${formatCurrency(grossAmount)} TL</div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Net Ücret</div>
+                            <div class="step-formula">${formatCurrency(grossAmount)} × 0.71491</div>
+                            <div class="step-result">${formatCurrency(netAmount)} TL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-summary">
+                <div class="summary-card gross">
+                    <div class="summary-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">Brüt Fazla Mesai Ücreti</div>
+                        <div class="summary-amount">${formatCurrency(grossAmount)} TL</div>
+                    </div>
+                </div>
+
+                <div class="summary-card net">
+                    <div class="summary-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-label">Net Fazla Mesai Ücreti</div>
+                        <div class="summary-amount">${formatCurrency(netAmount)} TL</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-footer">
+                <div class="footer-note">
+                    <i class="fas fa-info-circle"></i>
+                    Bu hesaplama İş Mahkemesi uygulamaları dikkate alınarak yapılmıştır.
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // Sonuçları gizle
@@ -417,13 +492,18 @@ function hideResults() {
 }
 
 // Sonuçları göster
-function showResults(content) {
+function showResults(content, isModern = false) {
     const resultsSection = document.getElementById('results-section');
     const resultsContent = document.getElementById('results-content');
-    
-    resultsContent.textContent = content;
+
+    if (isModern) {
+        resultsContent.innerHTML = content;
+    } else {
+        resultsContent.textContent = content;
+    }
+
     resultsSection.style.display = 'block';
-    
+
     // Sonuç alanına scroll
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

@@ -824,10 +824,10 @@ function getFeeParts(formData) {
 function createFeeRefundText(feeParts, totalPaidFees, partyText) {
     if (feeParts.length === 1) {
         // Tek harç türü varsa "olmak üzere toplam" kısmını çıkar
-        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts[0]}ın ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`;
+        return `-${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts[0]}ın ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`;
     } else {
         // Birden fazla harç türü varsa toplam göster
-        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
+        return `-${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
                `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`;
     }
 }
@@ -839,13 +839,13 @@ function createFeeShareText(feeParts, totalPaidFees, acceptanceRatio, partyText)
 
     if (feeParts.length === 1) {
         // Tek harç türü varsa "olmak üzere toplam" kısmını çıkar
-        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts[0]}ın kabul/ret oranı dikkate alınarak ` +
+        return `-${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts[0]}ın kabul/ret oranı dikkate alınarak ` +
                `${formatCurrency(defendantFeeShare)}TL'nin ${partyText.defendantText} alınarak ` +
                `${partyText.plaintiffText} verilmesine, bakiye ${formatCurrency(plaintiffFeeShare)}TL'nin ` +
                `${partyText.plaintiffPrefix} üzerinde bırakılmasına,`;
     } else {
         // Birden fazla harç türü varsa toplam göster
-        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
+        return `-${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
                `${formatCurrency(totalPaidFees)}TL'nin kabul/ret oranı dikkate alınarak ` +
                `${formatCurrency(defendantFeeShare)}TL'nin ${partyText.defendantText} alınarak ` +
                `${partyText.plaintiffText} verilmesine, bakiye ${formatCurrency(plaintiffFeeShare)}TL'nin ` +

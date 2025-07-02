@@ -406,7 +406,7 @@ function calculateFullAccept() {
         const { feeParts, totalPaidFees } = getFeeParts(formData);
 
         if (formData.checkboxes['exempt-from-fee']) {
-            resultParts.push("- Harçlar kanunu gereğince alınması gereken harç muafiyet nedeniyle alınmasına yer olmadığına,");
+            resultParts.push("-Harçlar kanunu gereğince alınması gereken harç muafiyet nedeniyle alınmasına yer olmadığına,");
         } else {
             if (formData.checkboxes['monetary-case']) {
                 const totalFee = caseAmount * 68.31 / 1000;
@@ -417,14 +417,14 @@ function calculateFullAccept() {
                     if (totalPaidFees === 0) {
                         // Hiç harç yatırılmamışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                             `${formatCurrency(requiredFee)}TL karar ve ilam harcının ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     } else {
                         // Kısmi harç yatırılmışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
                             `${formatCurrency(requiredFee)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
                             `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
@@ -437,7 +437,7 @@ function calculateFullAccept() {
                     // Harç fazla yatırılmış - iade gerekiyor
                     const refundAmount = Math.abs(remainingFee);
                     resultParts.push(
-                        `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                        `-Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
                         `${formatCurrency(requiredFee)}TL harcın mahsubu ile fazladan alınan ` +
                         `${formatCurrency(refundAmount)}TL'nin yatıran tarafa iadesine,`
                     );
@@ -456,14 +456,14 @@ function calculateFullAccept() {
                     if (totalPaidFees === 0) {
                         // Hiç harç yatırılmamışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                             `${formatCurrency(maktuHarc)}TL karar ve ilam harcının ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     } else {
                         // Kısmi harç yatırılmışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                             `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
                             `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
@@ -545,14 +545,14 @@ function calculatePartialAccept() {
                     if (totalPaidFees === 0) {
                         // Hiç harç yatırılmamışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                             `${formatCurrency(requiredFee)}TL karar ve ilam harcının ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     } else {
                         // Kısmi harç yatırılmışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
                             `${formatCurrency(requiredFee)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
                             `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
@@ -565,7 +565,7 @@ function calculatePartialAccept() {
                     // Harç fazla yatırılmış - iade gerekiyor
                     const refundAmount = Math.abs(remainingFee);
                     resultParts.push(
-                        `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                        `-Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
                         `${formatCurrency(requiredFee)}TL harcın mahsubu ile fazladan alınan ` +
                         `${formatCurrency(refundAmount)}TL'nin yatıran tarafa iadesine,`
                     );
@@ -579,14 +579,14 @@ function calculatePartialAccept() {
                     if (totalPaidFees === 0) {
                         // Hiç harç yatırılmamışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                             `${formatCurrency(maktuHarc)}TL karar ve ilam harcının ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     } else {
                         // Kısmi harç yatırılmışsa
                         resultParts.push(
-                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                             `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
                             `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
@@ -685,14 +685,14 @@ function calculateRejection() {
                 if (totalPaidFees === 0) {
                     // Hiç harç yatırılmamışsa
                     resultParts.push(
-                        `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                        `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                         `${formatCurrency(maktuHarc)}TL karar ve ilam harcının ` +
                         `${partyText.plaintiffPrefix.toLowerCase()}dan alınarak hazineye gelir kaydına,`
                     );
                 } else {
                     // Kısmi harç yatırılmışsa
                     resultParts.push(
-                        `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                        `-Harçlar Kanunu uyarınca alınması gereken toplam ` +
                         `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
                         `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
                         `${partyText.plaintiffPrefix.toLowerCase()}dan alınarak hazineye gelir kaydına,`
@@ -701,7 +701,7 @@ function calculateRejection() {
             } else if (remainingFee < 0) {
                 const refundAmount = Math.abs(remainingFee);
                 resultParts.push(
-                    `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                    `-Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
                     `${formatCurrency(maktuHarc)}TL harcın mahsubu ile fazladan alınan ` +
                     `${formatCurrency(refundAmount)}TL'nin yatıran tarafa iadesine,`
                 );
@@ -720,8 +720,7 @@ function calculateRejection() {
 
         if (expenseList.length > 0) {
             resultParts.push(
-                `- ${partyText.plaintiffPrefix}  ${expenseList.join(', ')} olmak üzere toplam ` +
-                `${formatCurrency(totalExpenses)}TL yargılama giderinin kendi üzerinde bırakılmasına,`
+                `- ${partyText.plaintiffPrefix} tarafından yapılan yargılama giderinin kendi üzerine bırakılmasına,`
             );
         }
 

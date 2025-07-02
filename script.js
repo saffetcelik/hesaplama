@@ -430,13 +430,21 @@ function calculateFullAccept() {
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     }
-                } else if (remainingFee <= 0) {
-                    // Harç yeterli veya fazla yatırılmışsa
-                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                } else if (remainingFee === 0) {
+                    // Harç tam yeterli
+                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                } else if (remainingFee < 0) {
+                    // Harç fazla yatırılmış - iade gerekiyor
+                    const refundAmount = Math.abs(remainingFee);
+                    resultParts.push(
+                        `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                        `${formatCurrency(requiredFee)}TL harcın mahsubu ile fazladan alınan ` +
+                        `${formatCurrency(refundAmount)}TL'nin yatıran tarafa iadesine,`
+                    );
                 }
 
-                // Sadece harç yatırılmışsa harç iadesi maddesi ekle
-                if (totalPaidFees > 0) {
+                // Sadece harç yatırılmışsa ve fazla harç yoksa harç iadesi maddesi ekle
+                if (totalPaidFees > 0 && remainingFee >= 0) {
                     resultParts.push(createFeeRefundText(feeParts, totalPaidFees, partyText));
                 }
             } else {
@@ -550,9 +558,17 @@ function calculatePartialAccept() {
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     }
-                } else if (remainingFee <= 0) {
-                    // Harç yeterli veya fazla yatırılmışsa
-                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                } else if (remainingFee === 0) {
+                    // Harç tam yeterli
+                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                } else if (remainingFee < 0) {
+                    // Harç fazla yatırılmış - iade gerekiyor
+                    const refundAmount = Math.abs(remainingFee);
+                    resultParts.push(
+                        `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                        `${formatCurrency(requiredFee)}TL harcın mahsubu ile fazladan alınan ` +
+                        `${formatCurrency(refundAmount)}TL'nin yatıran tarafa iadesine,`
+                    );
                 }
             } else {
                 // Para ile ölçülmeyen davalar için
@@ -581,9 +597,22 @@ function calculatePartialAccept() {
                 }
             }
 
-            // Harç paylaşımı (sadece harç yatırılmışsa)
+            // Harç paylaşımı (sadece harç yatırılmışsa ve fazla harç yoksa)
             if (totalPaidFees > 0) {
-                resultParts.push(createFeeShareText(feeParts, totalPaidFees, acceptanceRatio, partyText));
+                // Para ile ölçülebilen davalar için fazla harç kontrolü
+                if (formData.checkboxes['monetary-case']) {
+                    const totalFee = acceptedAmount * 68.31 / 1000;
+                    const requiredFee = Math.max(totalFee, 615.40);
+                    const remainingFee = requiredFee - totalPaidFees;
+
+                    if (remainingFee >= 0) {
+                        // Fazla harç yoksa normal paylaşım
+                        resultParts.push(createFeeShareText(feeParts, totalPaidFees, acceptanceRatio, partyText));
+                    }
+                } else {
+                    // Para ile ölçülemeyen davalar için normal paylaşım
+                    resultParts.push(createFeeShareText(feeParts, totalPaidFees, acceptanceRatio, partyText));
+                }
             }
         }
 

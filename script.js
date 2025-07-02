@@ -476,6 +476,7 @@ function calculateFullAccept() {
 
             var expenseItems = {
                 'kesif-harc': 'keşif harcı',
+                'basvuru-harc': 'başvuru harcı',
                 'bilirkisi': 'bilirkişi ücreti',
                 'tebligat': 'tebligat ve posta gideri'
             };
@@ -597,6 +598,7 @@ function calculatePartialAccept() {
 
         const expenseItems = {
             'kesif-harc': 'keşif harcı',
+            'basvuru-harc': 'başvuru harcı',
             'bilirkisi': 'bilirkişi ücreti',
             'tebligat': 'tebligat ve posta gideri'
         };
@@ -689,6 +691,7 @@ function calculateRejection() {
         // Masraf hesaplaması
         const expenseItems = {
             'kesif-harc': 'keşif harcı',
+            'basvuru-harc': 'başvuru harcı',
             'bilirkisi': 'bilirkişi ücreti',
             'tebligat': 'tebligat ve posta gideri'
         };
@@ -775,24 +778,9 @@ function getPartyText(multiplePlaintiffs, multipleDefendants) {
 
 function getFeeParts(formData) {
     const paidFees = parseAmount(formData.entries['pesin-harc'] || '0');
-    const applicationFee = parseAmount(formData.entries['basvuru-harc'] || '0');
+    const feeParts = [`${formatCurrency(paidFees)}TL peşin harç`];
+    let totalPaidFees = paidFees;
 
-    const feeParts = [];
-    let totalPaidFees = 0;
-
-    // Peşin harç ekle
-    if (paidFees > 0) {
-        feeParts.push(`${formatCurrency(paidFees)}TL peşin harç`);
-        totalPaidFees += paidFees;
-    }
-
-    // Başvurma harcı ekle
-    if (applicationFee > 0) {
-        feeParts.push(`${formatCurrency(applicationFee)}TL başvurma harcı`);
-        totalPaidFees += applicationFee;
-    }
-
-    // Diğer harçları ekle
     for (const feeType of ['tamamlama-harci', 'islah-harci']) {
         if (formData.entries[feeType]) {
             const feeAmount = parseAmount(formData.entries[feeType]);

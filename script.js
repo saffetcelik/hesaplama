@@ -414,38 +414,64 @@ function calculateFullAccept() {
                 const remainingFee = requiredFee - totalPaidFees;
 
                 if (remainingFee > 0) {
-                    resultParts.push(
-                        `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
-                        `${formatCurrency(requiredFee)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
-                        `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
-                        `${partyText.defendantText} alınarak hazineye gelir kaydına,`
-                    );
+                    if (totalPaidFees === 0) {
+                        // Hiç harç yatırılmamışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `${formatCurrency(requiredFee)}TL karar ve ilam harcının ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    } else {
+                        // Kısmi harç yatırılmışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                            `${formatCurrency(requiredFee)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
+                            `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    }
                 }
 
-                resultParts.push(
-                    `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
-                    `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`
-                );
+                // Sadece harç yatırılmışsa harç iadesi maddesi ekle
+                if (totalPaidFees > 0) {
+                    resultParts.push(
+                        `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
+                        `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`
+                    );
+                }
             } else {
                 // Para ile ölçülmeyen davalar için
                 const maktuHarc = 615.40;
                 const remainingFee = maktuHarc - totalPaidFees;
 
                 if (remainingFee > 0) {
-                    resultParts.push(
-                        `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
-                        `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
-                        `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
-                        `${partyText.defendantText} alınarak hazineye gelir kaydına,`
-                    );
+                    if (totalPaidFees === 0) {
+                        // Hiç harç yatırılmamışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `${formatCurrency(maktuHarc)}TL karar ve ilam harcının ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    } else {
+                        // Kısmi harç yatırılmışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
+                            `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    }
                 } else if (totalPaidFees === maktuHarc) {
                     resultParts.push("- Harçlar kanunu gereğince alınması gereken harç peşin yatırıldığından yeniden alınmasına yer olmadığına,");
                 }
 
-                resultParts.push(
-                    `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
-                    `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`
-                );
+                // Sadece harç yatırılmışsa harç iadesi maddesi ekle
+                if (totalPaidFees > 0) {
+                    resultParts.push(
+                        `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
+                        `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`
+                    );
+                }
             }
 
             var expenseItems = {
@@ -510,12 +536,22 @@ function calculatePartialAccept() {
                 const remainingFee = requiredFee - totalPaidFees;
 
                 if (remainingFee > 0) {
-                    resultParts.push(
-                        `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
-                        `${formatCurrency(requiredFee)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
-                        `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
-                        `${partyText.defendantText} alınarak hazineye gelir kaydına,`
-                    );
+                    if (totalPaidFees === 0) {
+                        // Hiç harç yatırılmamışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `${formatCurrency(requiredFee)}TL karar ve ilam harcının ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    } else {
+                        // Kısmi harç yatırılmışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca dava değeri üzerinden alınması gereken toplam ` +
+                            `${formatCurrency(requiredFee)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
+                            `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    }
                 }
             } else {
                 // Para ile ölçülmeyen davalar için
@@ -523,28 +559,40 @@ function calculatePartialAccept() {
                 const remainingFee = maktuHarc - totalPaidFees;
 
                 if (remainingFee > 0) {
-                    resultParts.push(
-                        `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
-                        `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
-                        `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
-                        `${partyText.defendantText} alınarak hazineye gelir kaydına,`
-                    );
+                    if (totalPaidFees === 0) {
+                        // Hiç harç yatırılmamışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `${formatCurrency(maktuHarc)}TL karar ve ilam harcının ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    } else {
+                        // Kısmi harç yatırılmışsa
+                        resultParts.push(
+                            `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                            `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
+                            `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
+                            `${partyText.defendantText} alınarak hazineye gelir kaydına,`
+                        );
+                    }
                 } else if (totalPaidFees === maktuHarc) {
                     resultParts.push("- Harçlar kanunu gereğince alınması gereken harç peşin yatırıldığından yeniden alınmasına yer olmadığına,");
                 }
             }
 
-            // Harç paylaşımı (hem para ile ölçülen hem de ölçülmeyen davalar için)
-            const plaintiffFeeShare = totalPaidFees * acceptanceRatio;
-            const defendantFeeShare = totalPaidFees - plaintiffFeeShare;
+            // Harç paylaşımı (sadece harç yatırılmışsa)
+            if (totalPaidFees > 0) {
+                const plaintiffFeeShare = totalPaidFees * acceptanceRatio;
+                const defendantFeeShare = totalPaidFees - plaintiffFeeShare;
 
-            resultParts.push(
-                `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
-                `${formatCurrency(totalPaidFees)}TL'nin kabul/ret oranı dikkate alınarak ` +
-                `${formatCurrency(defendantFeeShare)}TL'nin ${partyText.defendantText} alınarak ` +
-                `${partyText.plaintiffText} verilmesine, bakiye ${formatCurrency(plaintiffFeeShare)}TL'nin ` +
-                `${partyText.plaintiffPrefix} üzerinde bırakılmasına,`
-            );
+                resultParts.push(
+                    `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
+                    `${formatCurrency(totalPaidFees)}TL'nin kabul/ret oranı dikkate alınarak ` +
+                    `${formatCurrency(defendantFeeShare)}TL'nin ${partyText.defendantText} alınarak ` +
+                    `${partyText.plaintiffText} verilmesine, bakiye ${formatCurrency(plaintiffFeeShare)}TL'nin ` +
+                    `${partyText.plaintiffPrefix} üzerinde bırakılmasına,`
+                );
+            }
         }
 
         const expenseItems = {
@@ -612,12 +660,22 @@ function calculateRejection() {
             const remainingFee = maktuHarc - totalPaidFees;
 
             if (remainingFee > 0) {
-                resultParts.push(
-                    `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
-                    `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
-                    `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
-                    `${partyText.plaintiffPrefix.toLowerCase()}dan alınarak hazineye gelir kaydına,`
-                );
+                if (totalPaidFees === 0) {
+                    // Hiç harç yatırılmamışsa
+                    resultParts.push(
+                        `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                        `${formatCurrency(maktuHarc)}TL karar ve ilam harcının ` +
+                        `${partyText.plaintiffPrefix.toLowerCase()}dan alınarak hazineye gelir kaydına,`
+                    );
+                } else {
+                    // Kısmi harç yatırılmışsa
+                    resultParts.push(
+                        `- Harçlar Kanunu uyarınca alınması gereken toplam ` +
+                        `${formatCurrency(maktuHarc)}TL harçtan daha önce ödenen toplam ${formatCurrency(totalPaidFees)}TL ` +
+                        `harç düşüldükten sonra eksik kalan ${formatCurrency(remainingFee)}TL harcın ` +
+                        `${partyText.plaintiffPrefix.toLowerCase()}dan alınarak hazineye gelir kaydına,`
+                    );
+                }
             } else if (remainingFee < 0) {
                 const refundAmount = Math.abs(remainingFee);
                 resultParts.push(

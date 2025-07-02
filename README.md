@@ -161,3 +161,8 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 ---
 
 🚀 **Canlı Demo**: [https://saffetcelik.github.io/hesaplama](https://saffetcelik.github.io/hesaplama)
+
+
+ 
+.\deploy-actions.ps1 -SetupWorkflow
+.\deploy-actions.ps1

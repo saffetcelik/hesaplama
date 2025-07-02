@@ -432,7 +432,7 @@ function calculateFullAccept() {
                     }
                 } else if (remainingFee <= 0) {
                     // Harç yeterli veya fazla yatırılmışsa
-                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
 
                 // Sadece harç yatırılmışsa harç iadesi maddesi ekle
@@ -462,7 +462,7 @@ function calculateFullAccept() {
                         );
                     }
                 } else if (totalPaidFees === maktuHarc) {
-                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
 
                 // Sadece harç yatırılmışsa harç iadesi maddesi ekle
@@ -552,7 +552,7 @@ function calculatePartialAccept() {
                     }
                 } else if (remainingFee <= 0) {
                     // Harç yeterli veya fazla yatırılmışsa
-                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
             } else {
                 // Para ile ölçülmeyen davalar için
@@ -577,7 +577,7 @@ function calculatePartialAccept() {
                         );
                     }
                 } else if (totalPaidFees === maktuHarc) {
-                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
             }
 
@@ -601,7 +601,7 @@ function calculatePartialAccept() {
             const plaintiffExpenses = totalExpenses - defendantExpenses;
 
             resultParts.push(
-                `- ${partyText.plaintiffPrefix} tarafından yapılan; ${expenseList.join(', ')} olmak üzere toplam ` +
+                `-${partyText.plaintiffPrefix} tarafından yapılan; ${expenseList.join(', ')} olmak üzere toplam ` +
                 `${formatCurrency(totalExpenses)}TL yargılama giderinin kabul/ret oranı dikkate alınarak ` +
                 `${formatCurrency(defendantExpenses)}TL'nin ${partyText.defendantText} alınarak ` +
                 `${partyText.plaintiffText} verilmesine, bakiye yargılama gideri olan ` +
@@ -648,7 +648,7 @@ function calculateRejection() {
         const { feeParts, totalPaidFees } = getFeeParts(formData);
 
         if (totalPaidFees === maktuHarc) {
-            resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+            resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
         } else {
             const remainingFee = maktuHarc - totalPaidFees;
 
@@ -691,7 +691,7 @@ function calculateRejection() {
 
         if (expenseList.length > 0) {
             resultParts.push(
-                `- ${partyText.plaintiffPrefix} tarafından yapılan ${expenseList.join(', ')} olmak üzere toplam ` +
+                `- ${partyText.plaintiffPrefix}  ${expenseList.join(', ')} olmak üzere toplam ` +
                 `${formatCurrency(totalExpenses)}TL yargılama giderinin kendi üzerinde bırakılmasına,`
             );
         }
@@ -884,5 +884,5 @@ function calculateAttorneyFee(amount) {
 }
 
 function getCommonText() {
-    return "Kalan gider avansının karar kesinleştiğinde ve talep halinde, yatıran taraf dosyaya banka IBAN numarası bildirdiği takdirde bu hesaba, kaleme müracaat etmesi halinde mahkemeler veznesinden, aksi halde masrafı avanstan karşılanmak üzere resen PTT yoluyla konutta ödemeli olarak iadesine,";
+    return "-Kalan gider avansının karar kesinleştiğinde ve talep halinde, yatıran taraf dosyaya banka IBAN numarası bildirdiği takdirde bu hesaba, kaleme müracaat etmesi halinde mahkemeler veznesinden, aksi halde masrafı avanstan karşılanmak üzere resen PTT yoluyla konutta ödemeli olarak iadesine,";
 }

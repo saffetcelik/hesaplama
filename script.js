@@ -434,10 +434,7 @@ function calculateFullAccept() {
 
                 // Sadece harç yatırılmışsa harç iadesi maddesi ekle
                 if (totalPaidFees > 0) {
-                    resultParts.push(
-                        `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
-                        `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`
-                    );
+                    resultParts.push(createFeeRefundText(feeParts, totalPaidFees, partyText));
                 }
             } else {
                 // Para ile ölçülmeyen davalar için
@@ -467,10 +464,7 @@ function calculateFullAccept() {
 
                 // Sadece harç yatırılmışsa harç iadesi maddesi ekle
                 if (totalPaidFees > 0) {
-                    resultParts.push(
-                        `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
-                        `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`
-                    );
+                    resultParts.push(createFeeRefundText(feeParts, totalPaidFees, partyText));
                 }
             }
 
@@ -583,16 +577,7 @@ function calculatePartialAccept() {
 
             // Harç paylaşımı (sadece harç yatırılmışsa)
             if (totalPaidFees > 0) {
-                const plaintiffFeeShare = totalPaidFees * acceptanceRatio;
-                const defendantFeeShare = totalPaidFees - plaintiffFeeShare;
-
-                resultParts.push(
-                    `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
-                    `${formatCurrency(totalPaidFees)}TL'nin kabul/ret oranı dikkate alınarak ` +
-                    `${formatCurrency(defendantFeeShare)}TL'nin ${partyText.defendantText} alınarak ` +
-                    `${partyText.plaintiffText} verilmesine, bakiye ${formatCurrency(plaintiffFeeShare)}TL'nin ` +
-                    `${partyText.plaintiffPrefix} üzerinde bırakılmasına,`
-                );
+                resultParts.push(createFeeShareText(feeParts, totalPaidFees, acceptanceRatio, partyText));
             }
         }
 
@@ -778,20 +763,59 @@ function getPartyText(multiplePlaintiffs, multipleDefendants) {
 
 function getFeeParts(formData) {
     const paidFees = parseAmount(formData.entries['pesin-harc'] || '0');
-    const feeParts = [`${formatCurrency(paidFees)}TL peşin harç`];
+    const feeParts = [`${formatCurrency(paidFees)}TL peşin harcı`];
     let totalPaidFees = paidFees;
+
+    // Harç türü isimleri düzeltildi
+    const feeTypeNames = {
+        'tamamlama-harci': 'tamamlama harcı',
+        'islah-harci': 'ıslah harcı'
+    };
 
     for (const feeType of ['tamamlama-harci', 'islah-harci']) {
         if (formData.entries[feeType]) {
             const feeAmount = parseAmount(formData.entries[feeType]);
             if (feeAmount > 0) {
                 totalPaidFees += feeAmount;
-                feeParts.push(`${formatCurrency(feeAmount)}TL ${feeType.replace('-', ' ')}`);
+                feeParts.push(`${formatCurrency(feeAmount)}TL ${feeTypeNames[feeType]}`);
             }
         }
     }
 
     return { feeParts, totalPaidFees };
+}
+
+// Harç iadesi metni oluştur
+function createFeeRefundText(feeParts, totalPaidFees, partyText) {
+    if (feeParts.length === 1) {
+        // Tek harç türü varsa "olmak üzere toplam" kısmını çıkar
+        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts[0]}ın ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`;
+    } else {
+        // Birden fazla harç türü varsa toplam göster
+        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
+               `${formatCurrency(totalPaidFees)}TL'nin ${partyText.defendantText} alınarak ${partyText.plaintiffText} verilmesine,`;
+    }
+}
+
+// Kısmi kabul için harç paylaşım metni oluştur
+function createFeeShareText(feeParts, totalPaidFees, acceptanceRatio, partyText) {
+    const plaintiffFeeShare = totalPaidFees * acceptanceRatio;
+    const defendantFeeShare = totalPaidFees - plaintiffFeeShare;
+
+    if (feeParts.length === 1) {
+        // Tek harç türü varsa "olmak üzere toplam" kısmını çıkar
+        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts[0]}ın kabul/ret oranı dikkate alınarak ` +
+               `${formatCurrency(defendantFeeShare)}TL'nin ${partyText.defendantText} alınarak ` +
+               `${partyText.plaintiffText} verilmesine, bakiye ${formatCurrency(plaintiffFeeShare)}TL'nin ` +
+               `${partyText.plaintiffPrefix} üzerinde bırakılmasına,`;
+    } else {
+        // Birden fazla harç türü varsa toplam göster
+        return `- ${partyText.plaintiffPrefix} tarafından yatırılan ${feeParts.join(', ')} olmak üzere toplam ` +
+               `${formatCurrency(totalPaidFees)}TL'nin kabul/ret oranı dikkate alınarak ` +
+               `${formatCurrency(defendantFeeShare)}TL'nin ${partyText.defendantText} alınarak ` +
+               `${partyText.plaintiffText} verilmesine, bakiye ${formatCurrency(plaintiffFeeShare)}TL'nin ` +
+               `${partyText.plaintiffPrefix} üzerinde bırakılmasına,`;
+    }
 }
 
 function getExpenseList(formData, expenseItems) {

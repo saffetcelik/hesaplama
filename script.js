@@ -375,8 +375,8 @@ function calculateOvertime() {
         // Mahsup tutarını al (boşsa 0)
         const mahsupAmount = mahsupAmountStr && mahsupAmountStr.trim() !== '' ? parseAmount(mahsupAmountStr) : 0;
 
-        // %70'ini hesapla (bu brüt tutar)
-        const grossAmount = overtimeAmount * 0.70;
+        // Girilen tutar = Brüt tutar
+        const grossAmount = overtimeAmount;
 
         // Takdiri indirim brüt tutardan hesaplanır
         const discountAmount = grossAmount * (reductionRate / 100);
@@ -421,7 +421,7 @@ function formatOvertimeResult(originalAmount, reductionRate, grossAmount, discou
 
             <div class="result-input-summary">
                 <div class="input-card">
-                    <div class="input-label">Girilen Fazla Mesai Tutarı</div>
+                    <div class="input-label">Brüt Fazla Mesai Tutarı</div>
                     <div class="input-value">${formatCurrency(originalAmount)} TL</div>
                 </div>
             </div>
@@ -432,15 +432,6 @@ function formatOvertimeResult(originalAmount, reductionRate, grossAmount, discou
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <div class="step-content">
-                            <div class="step-title">Brüt Tutar (%70)</div>
-                            <div class="step-formula">${formatCurrency(originalAmount)} × 0.70</div>
-                            <div class="step-result">${formatCurrency(grossAmount)} TL</div>
-                        </div>
-                    </div>
-
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
                             <div class="step-title">Takdiri İndirim</div>
                             <div class="step-formula">${formatCurrency(grossAmount)} × %${reductionRate}</div>
                             <div class="step-result">-${formatCurrency(discountAmount)} TL</div>
@@ -448,7 +439,7 @@ function formatOvertimeResult(originalAmount, reductionRate, grossAmount, discou
                     </div>
 
                     <div class="step-card">
-                        <div class="step-number">3</div>
+                        <div class="step-number">2</div>
                         <div class="step-content">
                             <div class="step-title">İndirimli Brüt</div>
                             <div class="step-formula">${formatCurrency(grossAmount)} - ${formatCurrency(discountAmount)}</div>
@@ -458,7 +449,7 @@ function formatOvertimeResult(originalAmount, reductionRate, grossAmount, discou
 
                     ${mahsupAmount > 0 ? `
                     <div class="step-card">
-                        <div class="step-number">4</div>
+                        <div class="step-number">3</div>
                         <div class="step-content">
                             <div class="step-title">Mahsup</div>
                             <div class="step-formula">${formatCurrency(afterDiscountAmount)} - ${formatCurrency(mahsupAmount)}</div>
@@ -467,7 +458,7 @@ function formatOvertimeResult(originalAmount, reductionRate, grossAmount, discou
                     </div>
 
                     <div class="step-card">
-                        <div class="step-number">5</div>
+                        <div class="step-number">4</div>
                         <div class="step-content">
                             <div class="step-title">Net Ücret</div>
                             <div class="step-formula">${formatCurrency(finalGrossAmount)} × 0.71491</div>
@@ -476,7 +467,7 @@ function formatOvertimeResult(originalAmount, reductionRate, grossAmount, discou
                     </div>
                     ` : `
                     <div class="step-card">
-                        <div class="step-number">4</div>
+                        <div class="step-number">3</div>
                         <div class="step-content">
                             <div class="step-title">Net Ücret</div>
                             <div class="step-formula">${formatCurrency(finalGrossAmount)} × 0.71491</div>

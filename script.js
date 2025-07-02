@@ -884,5 +884,5 @@ function calculateAttorneyFee(amount) {
 }
 
 function getCommonText() {
-    return "Karar verilmesine.";
+    return "Kalan gider avansının karar kesinleştiğinde ve talep halinde, yatıran taraf dosyaya banka IBAN numarası bildirdiği takdirde bu hesaba, kaleme müracaat etmesi halinde mahkemeler veznesinden, aksi halde masrafı avanstan karşılanmak üzere resen PTT yoluyla konutta ödemeli olarak iadesine,";
 }

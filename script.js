@@ -432,7 +432,7 @@ function calculateFullAccept() {
                     }
                 } else if (remainingFee === 0) {
                     // Harç tam yeterli
-                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 } else if (remainingFee < 0) {
                     // Harç fazla yatırılmış - iade gerekiyor
                     const refundAmount = Math.abs(remainingFee);
@@ -560,7 +560,7 @@ function calculatePartialAccept() {
                     }
                 } else if (remainingFee === 0) {
                     // Harç tam yeterli
-                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
+                    resultParts.push("-Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 } else if (remainingFee < 0) {
                     // Harç fazla yatırılmış - iade gerekiyor
                     const refundAmount = Math.abs(remainingFee);

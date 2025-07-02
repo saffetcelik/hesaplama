@@ -49,6 +49,9 @@ function Main {
         return
     }
 
+    # Setup GitHub Actions workflow first
+    Setup-GitHubWorkflow
+
     # Main deployment process
     Deploy-ToGitHub
 }

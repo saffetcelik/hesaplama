@@ -212,9 +212,100 @@ body {
     padding: var(--space-8) 0;
 }
 
+/* Court Type Tabs */
+.court-tabs {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--space-8);
+    border: 1px solid var(--border);
+}
+
+.tabs-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.tabs-header h2 {
+    color: var(--text-primary);
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+}
+
+.tabs-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.tabs-nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-6);
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    min-width: 200px;
+    justify-content: center;
+}
+
+.tab-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.tab-btn i {
+    font-size: 1.25rem;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
 /* Calculation Type Selector */
 .calc-selector {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
     margin-bottom: var(--space-8);
+    border: 1px solid var(--border);
 }
 
 .selector-header {
@@ -222,7 +313,7 @@ body {
     margin-bottom: var(--space-6);
 }
 
-.selector-header h2 {
+.selector-header h3 {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -233,7 +324,7 @@ body {
     gap: var(--space-2);
 }
 
-.selector-header h2 i {
+.selector-header h3 i {
     color: var(--primary);
 }
 
@@ -881,6 +972,15 @@ body {
         text-align: center;
     }
 
+    .tabs-nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tab-btn {
+        min-width: 250px;
+    }
+
     .calc-types {
         grid-template-columns: 1fr;
     }
@@ -939,6 +1039,7 @@ body {
 /* Print Styles */
 @media print {
     .header,
+    .court-tabs,
     .calc-selector,
     .form-actions,
     .footer,

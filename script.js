@@ -4,50 +4,109 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Global state
+let currentCourtType = 'asliye';
 let currentCalculationType = 'tam-kabul';
 let calculationData = {};
 
 // Uygulama başlatma
 function initializeApp() {
+    setupCourtTabs();
     setupCalculationTypes();
     setupEventListeners();
     initTheme();
     setupModals();
+    updateFormVisibility();
     generateFormFields();
     showToast('Uygulama başarıyla yüklendi!', 'success');
+}
+
+// Mahkeme türü sekmelerini ayarla
+function setupCourtTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const courtType = this.getAttribute('data-court');
+
+            // Tüm sekmeleri pasif yap
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            // Seçilen sekmeyi aktif yap
+            this.classList.add('active');
+            document.getElementById(`${courtType}-content`).classList.add('active');
+
+            // Mevcut mahkeme türünü güncelle
+            currentCourtType = courtType;
+
+            // Form görünümünü güncelle
+            updateFormVisibility();
+
+            // Sonuçları temizle
+            hideResults();
+
+            showToast(`${this.querySelector('span').textContent} seçildi`, 'info');
+        });
+    });
 }
 
 // Hesaplama türü seçimi
 function setupCalculationTypes() {
     const calcTypes = document.querySelectorAll('.calc-type');
-    
+
     calcTypes.forEach(type => {
         type.addEventListener('click', function() {
-            // Tüm türleri pasif yap
-            calcTypes.forEach(t => t.classList.remove('active'));
-            
+            // Sadece aktif sekmedeki türleri kontrol et
+            const activeTabContent = document.querySelector('.tab-content.active');
+            const activeCalcTypes = activeTabContent.querySelectorAll('.calc-type');
+
+            // Aktif sekmedeki tüm türleri pasif yap
+            activeCalcTypes.forEach(t => t.classList.remove('active'));
+
             // Seçilen türü aktif yap
             this.classList.add('active');
-            
+
             // Mevcut türü güncelle
             currentCalculationType = this.getAttribute('data-type');
-            
+
             // Form alanlarını yeniden oluştur
             generateFormFields();
-            
+
             // Sonuçları temizle
             hideResults();
-            
+
             showToast(`${this.querySelector('h3').textContent} seçildi`, 'info');
         });
     });
 }
 
+// Form görünümünü güncelle
+function updateFormVisibility() {
+    const asliyeForm = document.getElementById('asliye-form');
+    const isForm = document.getElementById('is-form');
+
+    if (currentCourtType === 'asliye') {
+        asliyeForm.style.display = 'block';
+        isForm.style.display = 'none';
+    } else if (currentCourtType === 'is') {
+        asliyeForm.style.display = 'none';
+        isForm.style.display = 'block';
+    }
+}
+
 // Form alanlarını dinamik olarak oluştur
 function generateFormFields() {
+    if (currentCourtType === 'asliye') {
+        generateAsliyeFormFields();
+    }
+    // İş mahkemesi formu statik olduğu için ayrı bir fonksiyon gerekmez
+}
+
+function generateAsliyeFormFields() {
     const checkboxContainer = document.getElementById('case-info-checkboxes');
     const inputContainer = document.getElementById('financial-inputs');
-    
+
     // Checkbox alanlarını oluştur
     const checkboxes = getCheckboxesForType(currentCalculationType);
     checkboxContainer.innerHTML = checkboxes.map(checkbox => `
@@ -56,7 +115,7 @@ function generateFormFields() {
             <span class="checkbox-label">${checkbox.label}</span>
         </label>
     `).join('');
-    
+
     // Input alanlarını oluştur
     const inputs = getInputsForType(currentCalculationType);
     inputContainer.innerHTML = inputs.map(input => `
@@ -74,7 +133,7 @@ function generateFormFields() {
             >
         </div>
     `).join('');
-    
+
     // Para ile ölçülebilen dava checkbox'ı için event listener
     const monetaryCheckbox = document.getElementById(`${getPrefix()}-monetary-case`);
     if (monetaryCheckbox) {
@@ -149,21 +208,23 @@ function getInputsForType(type) {
 
 // Event listener'ları ayarla
 function setupEventListeners() {
-    // Temizle butonu
+    // Asliye mahkemesi butonları
     document.getElementById('clear-btn').addEventListener('click', clearForm);
-    
-    // Hesapla butonu
     document.getElementById('calculate-btn').addEventListener('click', performCalculation);
-    
+
+    // İş mahkemesi butonları
+    document.getElementById('clear-overtime-btn').addEventListener('click', clearOvertimeForm);
+    document.getElementById('calculate-overtime-btn').addEventListener('click', calculateOvertime);
+
     // Kopyala butonu
     document.getElementById('copy-btn').addEventListener('click', copyResultToClipboard);
-    
+
     // Yazdır butonu
     document.getElementById('print-btn').addEventListener('click', printResult);
-    
+
     // Tema değiştirme
     document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-    
+
     // Yardım butonu
     document.getElementById('help-btn').addEventListener('click', () => showModal('help-modal'));
 }
@@ -268,7 +329,7 @@ function showToast(message, type = 'success') {
 // Form temizleme
 function clearForm() {
     const prefix = getPrefix();
-    
+
     // Checkbox'ları temizle (para ile ölçülebilen dava hariç)
     document.querySelectorAll(`input[id^="${prefix}-"]:not(#${prefix}-monetary-case)`).forEach(input => {
         if (input.type === 'checkbox') {
@@ -277,9 +338,77 @@ function clearForm() {
             input.value = '';
         }
     });
-    
+
     hideResults();
     showToast('Form temizlendi', 'info');
+}
+
+// İş mahkemesi form temizleme
+function clearOvertimeForm() {
+    document.getElementById('overtime-amount').value = '';
+    document.getElementById('discretionary-reduction').value = '30';
+
+    hideResults();
+    showToast('Form temizlendi', 'info');
+}
+
+// Fazla mesai hesaplama
+function calculateOvertime() {
+    try {
+        const overtimeAmountStr = document.getElementById('overtime-amount').value;
+        const reductionRate = parseInt(document.getElementById('discretionary-reduction').value);
+
+        if (!overtimeAmountStr || overtimeAmountStr.trim() === '') {
+            showToast('Lütfen fazla mesai tutarını girin!', 'error');
+            return;
+        }
+
+        const overtimeAmount = parseAmount(overtimeAmountStr);
+
+        if (overtimeAmount <= 0) {
+            showToast('Fazla mesai tutarı 0\'dan büyük olmalıdır!', 'error');
+            return;
+        }
+
+        // %70'ini hesapla
+        const seventyPercent = overtimeAmount * 0.70;
+
+        // Takdiri indirimi uygula
+        const discountAmount = seventyPercent * (reductionRate / 100);
+        const grossAmount = seventyPercent - discountAmount;
+
+        // Net ücreti hesapla (0.71491 katsayısı ile)
+        const netAmount = grossAmount * 0.71491;
+
+        // Sonucu formatla ve göster
+        const result = formatOvertimeResult(overtimeAmount, reductionRate, seventyPercent, discountAmount, grossAmount, netAmount);
+        showResults(result);
+        showToast('Fazla mesai hesaplaması tamamlandı!', 'success');
+
+    } catch (error) {
+        console.error('Fazla mesai hesaplama hatası:', error);
+        showToast('Hesaplama sırasında bir hata oluştu.', 'error');
+    }
+}
+
+// Fazla mesai sonucunu formatla
+function formatOvertimeResult(originalAmount, reductionRate, seventyPercent, discountAmount, grossAmount, netAmount) {
+    return `FAZLA MESAİ ÜCRETİ HESAPLAMA SONUCU
+
+Girilen Fazla Mesai Tutarı: ${formatCurrency(originalAmount)} TL
+
+HESAPLAMA ADIMLARI:
+1. Fazla mesai tutarının %70'i: ${formatCurrency(seventyPercent)} TL
+2. Takdiri indirim oranı: %${reductionRate}
+3. Takdiri indirim tutarı: ${formatCurrency(discountAmount)} TL
+4. Brüt tutar: ${formatCurrency(grossAmount)} TL
+5. Net ücret (x0.71491): ${formatCurrency(netAmount)} TL
+
+ÖZET:
+• Brüt Fazla Mesai Ücreti: ${formatCurrency(grossAmount)} TL
+• Net Fazla Mesai Ücreti: ${formatCurrency(netAmount)} TL
+
+Bu hesaplama İş Mahkemesi uygulamaları dikkate alınarak yapılmıştır.`;
 }
 
 // Sonuçları gizle
@@ -303,15 +432,22 @@ function showResults(content) {
 function performCalculation() {
     try {
         let result = '';
-        
-        if (currentCalculationType === 'tam-kabul') {
-            result = calculateFullAccept();
-        } else if (currentCalculationType === 'kismen-kabul') {
-            result = calculatePartialAccept();
-        } else if (currentCalculationType === 'davanin-reddi') {
-            result = calculateRejection();
+
+        if (currentCourtType === 'asliye') {
+            if (currentCalculationType === 'tam-kabul') {
+                result = calculateFullAccept();
+            } else if (currentCalculationType === 'kismen-kabul') {
+                result = calculatePartialAccept();
+            } else if (currentCalculationType === 'davanin-reddi') {
+                result = calculateRejection();
+            }
+        } else if (currentCourtType === 'is') {
+            if (currentCalculationType === 'fazla-mesai') {
+                calculateOvertime();
+                return; // calculateOvertime kendi sonucunu gösterir
+            }
         }
-        
+
         if (result) {
             showResults(result);
             showToast('Hesaplama tamamlandı!', 'success');

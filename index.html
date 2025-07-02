@@ -41,39 +41,80 @@
         <!-- Main Content -->
         <main class="main">
             <div class="container">
-                <!-- Calculation Type Selector -->
-                <div class="calc-selector">
-                    <div class="selector-header">
-                        <h2><i class="fas fa-calculator"></i> Hesaplama Türü Seçin</h2>
-                        <p>Dava sonucuna göre uygun hesaplama türünü seçin</p>
+                <!-- Court Type Tabs -->
+                <div class="court-tabs">
+                    <div class="tabs-header">
+                        <h2><i class="fas fa-gavel"></i> Mahkeme Türü Seçin</h2>
+                        <p>Hesaplama yapmak istediğiniz mahkeme türünü seçin</p>
                     </div>
-                    <div class="calc-types">
-                        <button class="calc-type active" data-type="tam-kabul">
-                            <div class="calc-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <h3>Tam Kabul</h3>
-                            <p>Davanın tamamen kabul edildiği durumlar</p>
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" data-court="asliye">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>Asliye Mahkemeleri</span>
                         </button>
-                        <button class="calc-type" data-type="kismen-kabul">
-                            <div class="calc-icon">
-                                <i class="fas fa-balance-scale"></i>
-                            </div>
-                            <h3>Kısmen Kabul/Ret</h3>
-                            <p>Davanın kısmen kabul edildiği durumlar</p>
-                        </button>
-                        <button class="calc-type" data-type="davanin-reddi">
-                            <div class="calc-icon">
-                                <i class="fas fa-times-circle"></i>
-                            </div>
-                            <h3>Davanın Reddi</h3>
-                            <p>Davanın tamamen reddedildiği durumlar</p>
+                        <button class="tab-btn" data-court="is">
+                            <i class="fas fa-briefcase"></i>
+                            <span>İş Mahkemeleri</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Calculation Form -->
-                <div class="calc-form">
+                <!-- Asliye Mahkemeleri Tab Content -->
+                <div class="tab-content active" id="asliye-content">
+                    <!-- Calculation Type Selector -->
+                    <div class="calc-selector">
+                        <div class="selector-header">
+                            <h3><i class="fas fa-calculator"></i> Hesaplama Türü Seçin</h3>
+                            <p>Dava sonucuna göre uygun hesaplama türünü seçin</p>
+                        </div>
+                        <div class="calc-types">
+                            <button class="calc-type active" data-type="tam-kabul">
+                                <div class="calc-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h3>Tam Kabul</h3>
+                                <p>Davanın tamamen kabul edildiği durumlar</p>
+                            </button>
+                            <button class="calc-type" data-type="kismen-kabul">
+                                <div class="calc-icon">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                                <h3>Kısmen Kabul/Ret</h3>
+                                <p>Davanın kısmen kabul edildiği durumlar</p>
+                            </button>
+                            <button class="calc-type" data-type="davanin-reddi">
+                                <div class="calc-icon">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <h3>Davanın Reddi</h3>
+                                <p>Davanın tamamen reddedildiği durumlar</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- İş Mahkemeleri Tab Content -->
+                <div class="tab-content" id="is-content">
+                    <!-- Overtime Calculation Selector -->
+                    <div class="calc-selector">
+                        <div class="selector-header">
+                            <h3><i class="fas fa-clock"></i> İş Mahkemesi Hesaplamaları</h3>
+                            <p>İş hukuku kapsamındaki hesaplama türünü seçin</p>
+                        </div>
+                        <div class="calc-types">
+                            <button class="calc-type active" data-type="fazla-mesai">
+                                <div class="calc-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h3>Fazla Mesai Hesabı</h3>
+                                <p>Fazla mesai ücret hesaplaması</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asliye Calculation Form -->
+                <div class="calc-form" id="asliye-form">
                     <!-- Case Information Section -->
                     <div class="form-section">
                         <div class="section-header">
@@ -105,6 +146,58 @@
                             <span>Temizle</span>
                         </button>
                         <button id="calculate-btn" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i>
+                            <span>Hesapla</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- İş Mahkemesi Calculation Form -->
+                <div class="calc-form" id="is-form" style="display: none;">
+                    <!-- Overtime Calculation Section -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-clock"></i> Fazla Mesai Hesaplama Bilgileri</h3>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <div class="input-field money-field">
+                                    <label for="overtime-amount" class="input-label">
+                                        <i class="fas fa-lira-sign"></i>
+                                        Fazla Mesai Tutarı
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="overtime-amount"
+                                        class="input money-input"
+                                        placeholder="0,00 TL"
+                                    >
+                                </div>
+
+                                <div class="input-field">
+                                    <label for="discretionary-reduction" class="input-label">
+                                        <i class="fas fa-percentage"></i>
+                                        Takdiri İndirim Oranı
+                                    </label>
+                                    <select id="discretionary-reduction" class="input">
+                                        <option value="10">%10</option>
+                                        <option value="20">%20</option>
+                                        <option value="30" selected>%30</option>
+                                        <option value="40">%40</option>
+                                        <option value="50">%50</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions">
+                        <button id="clear-overtime-btn" class="btn btn-secondary">
+                            <i class="fas fa-eraser"></i>
+                            <span>Temizle</span>
+                        </button>
+                        <button id="calculate-overtime-btn" class="btn btn-primary">
                             <i class="fas fa-calculator"></i>
                             <span>Hesapla</span>
                         </button>

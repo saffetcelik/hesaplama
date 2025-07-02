@@ -400,6 +400,11 @@ function calculateFullAccept() {
         const formData = getFormData();
         let resultParts = [];
 
+        // Trigger visualizer
+        if (window.visualizer) {
+            window.visualizer.visualizeCalculation('tam-kabul', formData);
+        }
+
         const caseAmount = parseAmount(formData.entries['dava-miktari'] || '0');
         const partyText = getPartyText(formData.checkboxes['multiple-plaintiffs'], formData.checkboxes['multiple-defendants']);
 
@@ -513,6 +518,11 @@ function calculatePartialAccept() {
     try {
         const formData = getFormData();
         let resultParts = [];
+
+        // Trigger visualizer
+        if (window.visualizer) {
+            window.visualizer.visualizeCalculation('kismen-kabul', formData);
+        }
 
         const caseAmount = parseAmount(formData.entries['dava-miktari'] || '0');
         const acceptedAmount = parseAmount(formData.entries['kabul-miktari'] || '0');
@@ -648,6 +658,11 @@ function calculateRejection() {
     try {
         const formData = getFormData();
         let resultParts = [];
+
+        // Trigger visualizer
+        if (window.visualizer) {
+            window.visualizer.visualizeCalculation('red', formData);
+        }
 
         const partyText = getPartyText(formData.checkboxes['multiple-plaintiffs'], formData.checkboxes['multiple-defendants']);
 
@@ -853,3 +868,246 @@ function calculateAttorneyFee(amount) {
 function getCommonText() {
     return "Karar verilmesine.";
 }
+
+// Calculation Visualizer
+class CalculationVisualizer {
+    constructor() {
+        this.panel = document.getElementById('visualizer-panel');
+        this.content = document.getElementById('visualizer-content');
+        this.neuralNetwork = document.getElementById('neural-network');
+        this.calculationSteps = document.getElementById('calculation-steps');
+        this.toggle = document.getElementById('visualizer-toggle');
+        this.isCollapsed = false;
+        this.steps = [];
+
+        this.initializeEvents();
+        this.createNeuralNetwork();
+    }
+
+    initializeEvents() {
+        // Toggle panel
+        this.toggle.addEventListener('click', () => this.togglePanel());
+
+        // Auto-show when calculation starts
+        document.addEventListener('calculationStart', () => this.show());
+    }
+
+    togglePanel() {
+        this.isCollapsed = !this.isCollapsed;
+        this.panel.classList.toggle('collapsed', this.isCollapsed);
+    }
+
+    show() {
+        if (this.isCollapsed) {
+            this.togglePanel();
+        }
+    }
+
+    createNeuralNetwork() {
+        const layers = [
+            { name: 'Girdi', nodes: ['Dava', 'Harç', 'Masraf'] },
+            { name: 'İşlem', nodes: ['×', '÷', '+', '-'] },
+            { name: 'Sonuç', nodes: ['Harç', 'Masraf', 'Vekalet'] }
+        ];
+
+        this.neuralNetwork.innerHTML = layers.map((layer, layerIndex) => `
+            <div class="network-layer">
+                ${layer.nodes.map((node, nodeIndex) => `
+                    <div class="network-node" data-layer="${layerIndex}" data-node="${nodeIndex}">
+                        ${node}
+                        <div class="network-label">${layer.name}</div>
+                    </div>
+                `).join('')}
+                ${layerIndex < layers.length - 1 ? '<div class="network-connection"></div>' : ''}
+            </div>
+        `).join('');
+    }
+
+    addStep(title, content, formula = null, result = null) {
+        const stepNumber = this.steps.length + 1;
+        const step = {
+            number: stepNumber,
+            title,
+            content,
+            formula,
+            result
+        };
+
+        this.steps.push(step);
+        this.renderStep(step);
+        this.animateNeuralNetwork(stepNumber);
+    }
+
+    renderStep(step) {
+        const stepElement = document.createElement('div');
+        stepElement.className = 'calculation-step';
+        stepElement.style.animationDelay = `${(step.number - 1) * 0.2}s`;
+
+        stepElement.innerHTML = `
+            <div class="step-header">
+                <div class="step-number">${step.number}</div>
+                <div class="step-title">${step.title}</div>
+            </div>
+            <div class="step-content">
+                ${step.content}
+                ${step.formula ? `<div class="step-formula">${step.formula}</div>` : ''}
+                ${step.result ? `<div class="step-result">Sonuç: ${step.result}</div>` : ''}
+            </div>
+        `;
+
+        this.calculationSteps.appendChild(stepElement);
+
+        // Activate step after animation
+        setTimeout(() => {
+            stepElement.classList.add('active');
+        }, (step.number - 1) * 200 + 500);
+    }
+
+    animateNeuralNetwork(stepNumber) {
+        // Activate nodes based on step
+        const nodes = this.neuralNetwork.querySelectorAll('.network-node');
+        nodes.forEach((node, index) => {
+            if (index < stepNumber) {
+                setTimeout(() => {
+                    node.classList.add('active');
+                }, index * 300);
+            }
+        });
+    }
+
+    clear() {
+        this.steps = [];
+        this.calculationSteps.innerHTML = '';
+
+        // Reset neural network
+        const nodes = this.neuralNetwork.querySelectorAll('.network-node');
+        nodes.forEach(node => node.classList.remove('active'));
+    }
+
+    visualizeCalculation(type, formData) {
+        this.clear();
+        this.show();
+
+        // Add calculation steps based on type
+        switch(type) {
+            case 'tam-kabul':
+                this.visualizeFullAcceptance(formData);
+                break;
+            case 'kismen-kabul':
+                this.visualizePartialAcceptance(formData);
+                break;
+            case 'red':
+                this.visualizeRejection(formData);
+                break;
+        }
+    }
+
+    visualizeFullAcceptance(formData) {
+        this.addStep(
+            'Veri Girişi',
+            'Dava bilgileri ve harç miktarları alınıyor',
+            null,
+            'Veriler hazır'
+        );
+
+        const caseAmount = parseAmount(formData.entries['dava-miktari'] || '0');
+        const { totalPaidFees } = getFeeParts(formData);
+
+        if (formData.checkboxes['monetary-case']) {
+            const totalFee = caseAmount * 68.31 / 1000;
+            const requiredFee = Math.max(totalFee, 615.40);
+
+            this.addStep(
+                'Harç Hesaplama',
+                'Para ile ölçülen dava için harç hesaplanıyor',
+                `Harç = ${formatCurrency(caseAmount)} × 68.31 / 1000 = ${formatCurrency(totalFee)}`,
+                `Minimum 615.40 TL ile karşılaştırılarak: ${formatCurrency(requiredFee)}`
+            );
+
+            if (requiredFee > totalPaidFees) {
+                this.addStep(
+                    'Eksik Harç',
+                    'Eksik kalan harç miktarı hesaplanıyor',
+                    `Eksik = ${formatCurrency(requiredFee)} - ${formatCurrency(totalPaidFees)}`,
+                    `${formatCurrency(requiredFee - totalPaidFees)} TL`
+                );
+            }
+        } else {
+            this.addStep(
+                'Maktu Harç',
+                'Para ile ölçülmeyen dava için sabit harç uygulanıyor',
+                'Maktu Harç = 615.40 TL',
+                '615.40 TL'
+            );
+        }
+
+        this.addStep(
+            'Sonuç Oluşturma',
+            'Hesaplama tamamlandı, karar metni hazırlanıyor',
+            null,
+            'Hesaplama tamamlandı'
+        );
+    }
+
+    visualizePartialAcceptance(formData) {
+        this.addStep(
+            'Veri Girişi',
+            'Dava bilgileri ve kabul/ret oranları alınıyor',
+            null,
+            'Veriler hazır'
+        );
+
+        const caseAmount = parseAmount(formData.entries['dava-miktari'] || '0');
+        const acceptedAmount = parseAmount(formData.entries['kabul-miktari'] || '0');
+        const acceptanceRatio = caseAmount > 0 ? acceptedAmount / caseAmount : 0;
+
+        this.addStep(
+            'Kabul Oranı',
+            'Kabul edilen miktar oranı hesaplanıyor',
+            `Oran = ${formatCurrency(acceptedAmount)} / ${formatCurrency(caseAmount)}`,
+            `%${(acceptanceRatio * 100).toFixed(1)}`
+        );
+
+        this.addStep(
+            'Harç Hesaplama',
+            'Kabul edilen miktar üzerinden harç hesaplanıyor',
+            null,
+            'Harç hesaplandı'
+        );
+
+        this.addStep(
+            'Harç Paylaşımı',
+            'Harçlar kabul/ret oranına göre paylaştırılıyor',
+            `Paylaşım oranı: %${(acceptanceRatio * 100).toFixed(1)}`,
+            'Paylaşım tamamlandı'
+        );
+    }
+
+    visualizeRejection(formData) {
+        this.addStep(
+            'Veri Girişi',
+            'Dava bilgileri alınıyor',
+            null,
+            'Veriler hazır'
+        );
+
+        this.addStep(
+            'Red Durumu',
+            'Dava reddedildiği için harçlar davacıdan alınacak',
+            'Maktu Harç = 615.40 TL',
+            'Red hesaplaması'
+        );
+
+        this.addStep(
+            'Sonuç Oluşturma',
+            'Red kararı metni hazırlanıyor',
+            null,
+            'Hesaplama tamamlandı'
+        );
+    }
+}
+
+// Initialize visualizer
+document.addEventListener('DOMContentLoaded', () => {
+    window.visualizer = new CalculationVisualizer();
+});

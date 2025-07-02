@@ -40,8 +40,12 @@
 
         <!-- Main Content -->
         <main class="main">
-            <div class="container">
-                <!-- Calculation Type Selector -->
+            <div class="container main-container">
+                <!-- Main Content Area -->
+                <div class="content-wrapper">
+                    <!-- Left Panel - Form -->
+                    <div class="form-panel">
+                        <!-- Calculation Type Selector -->
                 <div class="calc-selector">
                     <div class="selector-header">
                         <h2><i class="fas fa-calculator"></i> Hesaplama Türü Seçin</h2>
@@ -129,6 +133,26 @@
                         </div>
                         <div class="results-content" id="results-content">
                             <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+                    </div>
+
+                    <!-- Right Panel - Calculation Visualizer -->
+                    <div class="visualizer-panel" id="visualizer-panel">
+                        <div class="visualizer-header">
+                            <h3><i class="fas fa-brain"></i> Hesaplama Süreci</h3>
+                            <button class="visualizer-toggle" id="visualizer-toggle">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="visualizer-content" id="visualizer-content">
+                            <div class="neural-network" id="neural-network">
+                                <!-- Neural network visualization will be generated here -->
+                            </div>
+                            <div class="calculation-steps" id="calculation-steps">
+                                <!-- Calculation steps will be displayed here -->
+                            </div>
                         </div>
                     </div>
                 </div>

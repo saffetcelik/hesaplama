@@ -731,8 +731,8 @@ function calculateRejection() {
             resultParts.push(
                 `- ${partyText.defendantPrefix} kendisini vekil ile temsil ettirdiğinden karar tarihi itibariyle ` +
                 `yürürlükte bulunan Avukatlık Asgari Ücret Tarifesi uyarınca hesaplanan ` +
-                `${formatCurrency(attorneyFee)}TL vekalet ücretinin ${partyText.plaintiffText} alınarak ` +
-                `davalılara verilmesine,`
+                `${formatCurrency(attorneyFee)}TL vekalet ücretinin ${partyText.plaintiffPrefix.toLowerCase()}dan alınarak ` +
+                `${partyText.defendantText} verilmesine,`
             );
         }
 

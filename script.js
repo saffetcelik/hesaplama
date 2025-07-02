@@ -430,6 +430,9 @@ function calculateFullAccept() {
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     }
+                } else if (remainingFee <= 0) {
+                    // Harç yeterli veya fazla yatırılmışsa
+                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
 
                 // Sadece harç yatırılmışsa harç iadesi maddesi ekle
@@ -459,7 +462,7 @@ function calculateFullAccept() {
                         );
                     }
                 } else if (totalPaidFees === maktuHarc) {
-                    resultParts.push("- Harçlar kanunu gereğince alınması gereken harç peşin yatırıldığından yeniden alınmasına yer olmadığına,");
+                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
 
                 // Sadece harç yatırılmışsa harç iadesi maddesi ekle
@@ -547,6 +550,9 @@ function calculatePartialAccept() {
                             `${partyText.defendantText} alınarak hazineye gelir kaydına,`
                         );
                     }
+                } else if (remainingFee <= 0) {
+                    // Harç yeterli veya fazla yatırılmışsa
+                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
             } else {
                 // Para ile ölçülmeyen davalar için
@@ -571,7 +577,7 @@ function calculatePartialAccept() {
                         );
                     }
                 } else if (totalPaidFees === maktuHarc) {
-                    resultParts.push("- Harçlar kanunu gereğince alınması gereken harç peşin yatırıldığından yeniden alınmasına yer olmadığına,");
+                    resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
                 }
             }
 
@@ -642,7 +648,7 @@ function calculateRejection() {
         const { feeParts, totalPaidFees } = getFeeParts(formData);
 
         if (totalPaidFees === maktuHarc) {
-            resultParts.push("- Harçlar kanunu gereğince alınması gereken harç peşin yatırıldığından yeniden alınmasına yer olmadığına,");
+            resultParts.push("- Alınan harç yeterli olmakla başkaca harç alınmasına yer olmadığına,");
         } else {
             const remainingFee = maktuHarc - totalPaidFees;
 

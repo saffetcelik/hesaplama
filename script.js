@@ -295,9 +295,25 @@ function hideModal(modalId) {
 // Toast bildirimleri
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
+
+    if (!toast) {
+        console.error('Toast element not found!');
+        return;
+    }
+
     const toastIcon = toast.querySelector('.toast-icon');
     const toastMessage = toast.querySelector('.toast-message');
-    
+
+    if (!toastIcon) {
+        console.error('Toast icon element not found!');
+        return;
+    }
+
+    if (!toastMessage) {
+        console.error('Toast message element not found!');
+        return;
+    }
+
     // İkon ve renk ayarla
     const icons = {
         success: 'fas fa-check-circle',
@@ -305,21 +321,21 @@ function showToast(message, type = 'success') {
         warning: 'fas fa-exclamation-triangle',
         info: 'fas fa-info-circle'
     };
-    
+
     const colors = {
         success: 'var(--success)',
         error: 'var(--error)',
         warning: 'var(--warning)',
         info: 'var(--info)'
     };
-    
+
     toastIcon.className = icons[type] || icons.success;
     toast.style.background = colors[type] || colors.success;
     toastMessage.textContent = message;
-    
+
     // Toast'ı göster
     toast.classList.add('show');
-    
+
     // 3 saniye sonra gizle
     setTimeout(() => {
         toast.classList.remove('show');
@@ -638,6 +654,11 @@ function toggleAmountFields(prefix, isEnabled) {
 function calculateFullAccept() {
     try {
         const formData = getFormData();
+
+        if (!formData || !formData.checkboxes || !formData.entries) {
+            throw new Error('Form data is invalid or missing');
+        }
+
         let resultParts = [];
 
         const caseAmount = parseAmount(formData.entries['dava-miktari'] || '0');
@@ -646,7 +667,7 @@ function calculateFullAccept() {
         const { feeParts, totalPaidFees } = getFeeParts(formData);
 
         if (formData.checkboxes['exempt-from-fee']) {
-            resultParts.push("-Harçlar kanunu gereğince alınması gereken harç muafiyet nedeniyle alınmasına yer olmadığına,");
+            resultParts.push("-Davalı taraf harçtan muaf olduğundan bu hususta karar verilmesine yer olmadığına,");
         } else {
             if (formData.checkboxes['monetary-case']) {
                 const totalFee = caseAmount * 68.31 / 1000;
@@ -774,7 +795,7 @@ function calculatePartialAccept() {
         const { feeParts, totalPaidFees } = getFeeParts(formData);
 
         if (formData.checkboxes['exempt-from-fee']) {
-            resultParts.push("- Harçlar kanunu gereğince alınması gereken harç muafiyet nedeniyle alınmasına yer olmadığına,");
+            resultParts.push("-Davalı taraf harçtan muaf olduğundan bu hususta karar verilmesine yer olmadığına,");
         } else {
             if (formData.checkboxes['monetary-case']) {
                 const totalFee = acceptedAmount * 68.31 / 1000;
@@ -1036,6 +1057,10 @@ function getPartyText(multiplePlaintiffs, multipleDefendants) {
 }
 
 function getFeeParts(formData) {
+    if (!formData || !formData.entries) {
+        throw new Error('Form data entries is undefined');
+    }
+
     const paidFees = parseAmount(formData.entries['pesin-harc'] || '0');
     const feeParts = [`${formatCurrency(paidFees)}TL peşin harcı`];
     let totalPaidFees = paidFees;

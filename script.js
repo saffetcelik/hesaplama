@@ -297,20 +297,13 @@ function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
 
     if (!toast) {
-        console.error('Toast element not found!');
         return;
     }
 
     const toastIcon = toast.querySelector('.toast-icon');
     const toastMessage = toast.querySelector('.toast-message');
 
-    if (!toastIcon) {
-        console.error('Toast icon element not found!');
-        return;
-    }
-
-    if (!toastMessage) {
-        console.error('Toast message element not found!');
+    if (!toastIcon || !toastMessage) {
         return;
     }
 
@@ -740,13 +733,14 @@ function calculateFullAccept() {
                 }
             }
 
-            var expenseItems = {
-                'kesif-harc': 'keşif harcı',
-                'basvuru-harc': 'başvuru harcı',
-                'bilirkisi': 'bilirkişi ücreti',
-                'tebligat': 'tebligat ve posta gideri'
-            };
         }
+
+        const expenseItems = {
+            'kesif-harc': 'keşif harcı',
+            'basvuru-harc': 'başvuru harcı',
+            'bilirkisi': 'bilirkişi ücreti',
+            'tebligat': 'tebligat ve posta gideri'
+        };
 
         const { expenseList, totalExpenses } = getExpenseList(formData, expenseItems);
 
